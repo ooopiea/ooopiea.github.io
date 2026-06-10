@@ -1,0 +1,18 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(node -c js/plan.js)",
+      "Bash(node -c js/app.js)",
+      "Bash(node -e ' *)",
+      "PowerShell(Start-Process \"d:\\\\ZBY_synchronization\\\\【个人】Vibe_coding\\\\健身\\\\index.html\"; \"已在默认浏览器打开\")",
+      "Bash(git --version)",
+      "Bash(gh --version)",
+      "Bash(gh auth *)",
+      "Bash(git config *)",
+      "Bash(git init *)",
+      "Bash(printf \"node_modules/\\\\n.DS_Store\\\\nThumbs.db\\\\n\")",
+      "Bash(git add *)",
+      "Bash(git commit -m '健身计划网页 v1：三练循环+肌肉发力图+记录 *)"
+    ]
+  }
+}
