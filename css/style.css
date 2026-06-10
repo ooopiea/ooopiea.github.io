@@ -199,6 +199,35 @@ body::after{
 .legend span{display:flex;align-items:center;gap:4px}
 .legend i{width:9px;height:9px;border-radius:2px;display:inline-block}
 
+.cell.has{cursor:pointer}
+.cell[data-detail]{cursor:pointer}
+.cell .dot.hollow{background:transparent;border:1.5px solid var(--ink-faint)}
+.cell.sel{outline:2px solid var(--ink);outline-offset:-2px}
+
+/* 训练明细 */
+.detail-empty{background:var(--paper-3);border:1.3px dashed var(--line-strong);border-radius:6px;
+  padding:22px 14px;text-align:center;font-size:12px;color:var(--ink-faint)}
+.detail{background:var(--paper-3);border:1.5px solid var(--line-strong);border-radius:6px;
+  box-shadow:3px 3px 0 var(--shadow);overflow:hidden;animation:fade .3s ease both}
+.detail-head{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;
+  padding:13px 14px;background:var(--ink);color:var(--paper)}
+.detail-date{font-family:var(--serif);font-weight:900;font-size:16px}
+.detail-tag{font-family:var(--sans);font-weight:700;font-size:11px;letter-spacing:.5px;padding:3px 9px;
+  border-radius:3px;color:var(--paper)}
+.detail-tag.tag-A{background:var(--rust)} .detail-tag.tag-B{background:var(--clay);color:var(--ink)}
+.detail-tag.tag-C{background:var(--olive)}
+.detail-list{padding:6px 6px}
+.drow{display:flex;align-items:center;gap:10px;padding:9px 8px;border-bottom:1px dashed var(--line)}
+.drow:last-child{border-bottom:none}
+.dnum{font-family:var(--display);font-size:16px;color:var(--ink-faint);width:22px;flex:none}
+.dname{flex:1;font-size:13px;font-weight:500;line-height:1.25;min-width:0}
+.dname em{display:block;font-style:normal;font-size:10px;color:var(--rust);font-weight:700;margin-top:1px}
+.dval{font-family:var(--display);font-size:16px;letter-spacing:1px;color:var(--ink);white-space:nowrap}
+.drow:not(.done) .dval{color:var(--ink-faint)}
+.dchk{flex:none;width:22px;height:22px;border-radius:50%;display:grid;place-items:center;font-size:13px;
+  font-weight:700;background:var(--paper-2);color:var(--ink-faint)}
+.drow.done .dchk{background:var(--olive);color:var(--paper)}
+
 .stat-row{display:flex;gap:10px;margin:14px 4px}
 .stat{flex:1;background:var(--ink);color:var(--paper);border-radius:6px;padding:12px;text-align:center;
   box-shadow:3px 3px 0 var(--rust)}

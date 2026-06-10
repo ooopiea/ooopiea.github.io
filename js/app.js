@@ -249,8 +249,10 @@ function renderHistory(){
     const key=`${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
     const log=state.logs[key];
     const done = log && Object.values(log.rec).some(r=>r.done);
-    const cls = done?log.day:'';
-    cells+=`<div class="cell ${cls} ${key===TODAY?'today':''}">${d}${done?`<span class="dot"></span>`:''}</div>`;
+    const has = !!log && log.sel && log.sel.length;
+    const cls = done?log.day:(has?'has':'');
+    const dot = done?`<span class="dot"></span>`:(has?`<span class="dot hollow"></span>`:'');
+    cells+=`<div class="cell ${cls} ${key===TODAY?'today':''}" ${has?`data-detail="${key}"`:''}>${d}${dot}</div>`;
   }
   document.getElementById('history').innerHTML = `
     <div class="sec-title">训练日历</div>
@@ -267,7 +269,40 @@ function renderHistory(){
         <span><i style="background:var(--olive)"></i>C 臀腿</span>
       </div>
     </div>
-    ${statsHTML()}`;
+    ${statsHTML()}
+    <div class="sec-title">训练明细</div>
+    <div id="dayDetail"></div>`;
+  // 默认展示：今日（若有记录）否则最近一次
+  const keys=Object.keys(state.logs).filter(k=>state.logs[k].sel&&state.logs[k].sel.length).sort();
+  const def = state.logs[TODAY]?.sel?.length ? TODAY : (keys.length?keys[keys.length-1]:null);
+  renderDayDetail(def);
+}
+
+/* 某一天的训练明细 */
+function renderDayDetail(key){
+  const el=document.getElementById('dayDetail'); if(!el) return;
+  const log=key && state.logs[key];
+  if(!log){ el.innerHTML=`<div class="detail-empty">点击日历上有标记的日期，查看当天的训练记录</div>`; return; }
+  const day=PLAN[log.day];
+  const exs=log.sel.map(findEx).filter(Boolean);
+  const dateStr=new Date(key+'T00:00:00').toLocaleDateString('zh-CN',{month:'long',day:'numeric',weekday:'long'});
+  const doneN=exs.filter(e=>log.rec[e.id]?.done).length;
+  el.innerHTML=`<div class="detail">
+    <div class="detail-head">
+      <div class="detail-date">${dateStr}</div>
+      <div class="detail-tag tag-${day.key}">DAY ${day.key} · ${day.title} · ${doneN}/${exs.length}</div>
+    </div>
+    <div class="detail-list">
+      ${exs.map((e,i)=>{const r=log.rec[e.id]||{};
+        const val=[r.w?`${r.w}kg`:'',r.r?`×${r.r}`:''].filter(Boolean).join(' ')||'未记录';
+        return `<div class="drow ${r.done?'done':''}">
+          <span class="dnum">${String(i+1).padStart(2,'0')}</span>
+          <span class="dname">${e.name}<em>${e.sub}</em></span>
+          <span class="dval">${val}</span>
+          <span class="dchk">${r.done?'✓':'·'}</span>
+        </div>`;}).join('')}
+    </div>
+  </div>`;
 }
 function statsHTML(){
   const all=Object.entries(state.logs);
@@ -283,7 +318,14 @@ function statsHTML(){
 }
 document.addEventListener('click', e=>{
   const c=e.target.closest('[data-cal]');
-  if(c){ calRef.setMonth(calRef.getMonth()+ +c.dataset.cal); renderHistory(); }
+  if(c){ calRef.setMonth(calRef.getMonth()+ +c.dataset.cal); renderHistory(); return; }
+  const cell=e.target.closest('[data-detail]');
+  if(cell){
+    document.querySelectorAll('.cell.sel').forEach(x=>x.classList.remove('sel'));
+    cell.classList.add('sel');
+    renderDayDetail(cell.dataset.detail);
+    document.getElementById('dayDetail')?.scrollIntoView({behavior:'smooth',block:'nearest'});
+  }
 });
 
 /* ---------- 渲染：我的 ---------- */
